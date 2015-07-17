@@ -1,0 +1,3 @@
+[submodule "i2c"]
+	path = i2c
+	url = https://github.com/usedbytes/usi_i2c_slave.git
