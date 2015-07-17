@@ -1,3 +1,6 @@
 [submodule "i2c"]
 	path = i2c
 	url = https://github.com/usedbytes/usi_i2c_slave.git
+[submodule "ws2812"]
+	path = ws2812
+	url = https://github.com/cpldcpu/light_ws2812.git
