@@ -13,7 +13,7 @@
 
 # Microcontroller Type
 # MCU = attiny13
-MCU = attiny45
+MCU = attiny2313
 # MCU = atmega8
 
 # Target file name (without extension).

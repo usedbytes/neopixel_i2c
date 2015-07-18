@@ -3,8 +3,6 @@
 *
 * cycles one LED through red, green, blue
 *
-* This example is configured for a ATtiny85 with PLL clock fuse set and
-* the WS2812 string connected to PB4.
 */
 
 #include <util/delay.h>
