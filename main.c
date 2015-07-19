@@ -13,9 +13,6 @@
 #include <i2c/i2c_machine.h>
 
 volatile uint8_t i2c_reg[I2C_N_REG] = { 0, 128, 0, 128 };
-const uint8_t i2c_w_mask[I2C_N_REG] = {
-	CTRL_GLB | CTRL_RST, 0xFF, 0xFF, 0xFF,
-};
 
 struct cRGB led[1];
 
