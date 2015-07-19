@@ -3,8 +3,8 @@
 | Address | Name       | Description          | Access | Reset |
 |--------:|------------|:---------------------|--------|------:|
 |   0x00  | **CTRL**   | Control Register     | R/W    |    0  |
-|   0x01  | **GLB_R**  | Global Red   Value   | R/W    |    0  |
-|   0x02  | **GLB_G**  | Global Green Value   | R/W    |    0  |
+|   0x01  | **GLB_G**  | Global Green Value   | R/W    |    0  |
+|   0x02  | **GLB_R**  | Global Red Value     | R/W    |    0  |
 |   0x03  | **GLB_B**  | Global Blue Value    | R/W    |    0  |
 
 # Register Descriptions
