@@ -12,18 +12,16 @@
 #include <i2c/i2c_slave_defs.h>
 #include <i2c/i2c_machine.h>
 
-volatile uint8_t i2c_reg[I2C_N_REG] = { 0, 128, 0, 128 };
-
-#define N_LEDS 16
+volatile uint8_t i2c_reg[I2C_N_REG];
 
 inline void set_leds_global(void)
 {
-	ws2812_setleds_constant((uint8_t *)&REG_GLB_G, 16);
+	ws2812_setleds_constant((uint8_t *)&REG_GLB_G, N_LEDS);
 }
 
 inline void update_leds(void)
 {
-
+	ws2812_sendarray((uint8_t *)i2c_reg + I2C_N_GLB_REG, N_LEDS * 3);
 }
 
 int main(void)
@@ -32,8 +30,6 @@ int main(void)
 
 	i2c_init();
 	sei();
-
-	set_leds_global();
 
 	while(1)
 	{
