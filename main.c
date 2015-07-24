@@ -8,11 +8,13 @@
 #include <util/delay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/pgmspace.h>
 #include <Light_WS2812/light_ws2812.h>
 #include <i2c/i2c_slave_defs.h>
 #include <i2c/i2c_machine.h>
 
 volatile uint8_t i2c_reg[I2C_N_REG];
+const uint8_t init_color[3] PROGMEM = { 0x00, 0xFF, 0x00 };
 
 inline void set_leds_global(void)
 {
@@ -24,12 +26,91 @@ inline void update_leds(void)
 	ws2812_sendarray((uint8_t *)i2c_reg + I2C_N_GLB_REG, N_LEDS * 3);
 }
 
+inline void do_reset(void)
+{
+	REG_GLB_G = 0;
+	REG_GLB_R = 0;
+	REG_GLB_B = 0;
+	ws2812_setleds_constant((uint8_t *)&REG_GLB_G, N_LEDS);
+	REG_GLB_G = pgm_read_byte(init_color);
+	REG_GLB_R = pgm_read_byte(init_color + 1);
+	REG_GLB_B = pgm_read_byte(init_color + 2);
+	REG_CTRL = 0;
+}
+
+void swirly(void)
+{
+	uint8_t led = N_LEDS - 1;
+	volatile uint8_t *p = i2c_reg + I2C_N_GLB_REG + (N_LEDS * 3);
+	uint8_t g = pgm_read_byte(init_color);
+	uint8_t r = pgm_read_byte(init_color + 1);
+	uint8_t b = pgm_read_byte(init_color + 2);
+	uint8_t tmp;
+
+	/* Initialise a bright spot with a tail:
+	 * { 255, 127, 63, 31, 15, 15, 15, 15 ... }
+	 */
+	while (led--) {
+		*(--p) = b;
+		if (b & 0xf0)
+			b >>= 1;
+
+		*(--p) = r;
+		if (r & 0xf0)
+			r >>= 1;
+
+		*(--p) = g;
+		if (g & 0xf0)
+			g >>= 1;
+
+	}
+
+	/* Shuffle the bright spot along */
+	g = pgm_read_byte(init_color);
+	r = pgm_read_byte(init_color + 1);
+	b = pgm_read_byte(init_color + 2);
+	while (1)
+	{
+		update_leds();
+
+		led = N_LEDS;
+		p = &i2c_reg[I2C_N_GLB_REG];
+		while (led--) {
+			tmp = *p;
+			*(p++) = g;
+			if (led)
+				g = tmp;
+
+			tmp = *p;
+			*(p++) = r;
+			if (led)
+				r = tmp;
+
+			tmp = *p;
+			*(p++) = b;
+			if (led)
+				b = tmp;
+		}
+
+		/* As soon as there's a transaction to handle, bail out */
+		tmp = 70;
+		while (tmp--) {
+			if (i2c_check_stop())
+				return;
+			_delay_ms(1);
+		}
+	}
+}
+
 int main(void)
 {
 	DDRD = 0x1;
 
 	i2c_init();
 	sei();
+
+	do_reset();
+	swirly();
 
 	while(1)
 	{
