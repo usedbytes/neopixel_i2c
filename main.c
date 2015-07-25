@@ -42,7 +42,7 @@ void do_reset(void)
 
 void swirly(void)
 {
-	uint8_t led = N_LEDS - 1;
+	uint8_t led = N_LEDS;
 	volatile uint8_t *p = i2c_reg + I2C_N_GLB_REG + (N_LEDS * 3);
 	uint8_t g = pgm_read_byte(init_color);
 	uint8_t r = pgm_read_byte(init_color + 1);
