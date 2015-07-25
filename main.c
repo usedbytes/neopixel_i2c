@@ -26,8 +26,9 @@ inline void update_leds(void)
 	ws2812_sendarray((uint8_t *)i2c_reg + I2C_N_GLB_REG, N_LEDS * 3);
 }
 
-inline void do_reset(void)
+void do_reset(void)
 {
+	cli();
 	REG_GLB_G = 0;
 	REG_GLB_R = 0;
 	REG_GLB_B = 0;
@@ -36,6 +37,7 @@ inline void do_reset(void)
 	REG_GLB_R = pgm_read_byte(init_color + 1);
 	REG_GLB_B = pgm_read_byte(init_color + 2);
 	REG_CTRL = 0;
+	sei();
 }
 
 void swirly(void)
@@ -109,13 +111,16 @@ int main(void)
 	i2c_init();
 	sei();
 
-	do_reset();
 	swirly();
+	goto inner;
 
 	while(1)
 	{
 		if (i2c_check_stop()) {
-			if (REG_CTRL & CTRL_GLB)
+inner:
+			if (REG_CTRL & CTRL_RST)
+				do_reset();
+			else if (REG_CTRL & CTRL_GLB)
 				set_leds_global();
 			else
 				update_leds();
