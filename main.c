@@ -106,7 +106,7 @@ void swirly(void)
 
 int main(void)
 {
-	DDRD = 0x1;
+	DDRB = (1 << 3);
 
 	i2c_init();
 	sei();
