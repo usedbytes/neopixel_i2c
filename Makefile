@@ -30,6 +30,11 @@ AVRDUDE_PROGRAMMER = usbasp              # official name of
 AVRDUDE_PORT = usb
 #AVRDUDE_PORT = lpt1		       # windows
 
+# 8MHz internal RC, no divider
+LFUSE=0xe2
+HFUSE=0xdf
+EFUSE=0xff
+
 ############# Don't need to change below here for most purposes  (Elliot)
 
 # Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
@@ -280,8 +285,8 @@ extcoff: $(TARGET).elf
 program: $(TARGET).hex $(TARGET).eep
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
-
-
+fuses:
+	$(AVRDUDE) $(AVRDUDE_FLAGS) -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m
 
 # Create final output files (.hex, .eep) from ELF output file.
 %.hex: %.elf
@@ -385,5 +390,5 @@ clean_list :
 
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion coff extcoff \
-	clean clean_list program
+	clean clean_list program fuses
 
