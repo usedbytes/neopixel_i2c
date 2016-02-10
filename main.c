@@ -28,6 +28,9 @@ inline void update_leds(void)
 
 void do_reset(void)
 {
+	char i = N_LEDS * 3;
+	volatile uint8_t *p = i2c_reg + I2C_N_GLB_REG;
+
 	cli();
 	REG_GLB_G = 0;
 	REG_GLB_R = 0;
@@ -37,6 +40,13 @@ void do_reset(void)
 	REG_GLB_R = pgm_read_byte(init_color + 1);
 	REG_GLB_B = pgm_read_byte(init_color + 2);
 	REG_CTRL = 0;
+
+	/* Reset the registers or we'll just go back to the old values! */
+	while (i--) {
+		*p = 0;
+		p++;
+	}
+
 	sei();
 }
 
