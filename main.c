@@ -14,7 +14,7 @@
 #include <i2c/i2c_machine.h>
 
 volatile uint8_t i2c_reg[I2C_N_REG];
-const uint8_t init_color[3] PROGMEM = { 0x00, 0xFF, 0x00 };
+const uint8_t init_color[3] PROGMEM = { 0x80, 0x80, 0x80 };
 
 inline void set_leds_global(void)
 {
@@ -105,7 +105,7 @@ void swirly(void)
 		}
 
 		/* As soon as there's a transaction to handle, bail out */
-		tmp = 70;
+		tmp = 100;
 		while (tmp--) {
 			if (i2c_check_stop())
 				return;
