@@ -18,12 +18,12 @@ const uint8_t init_color[3] PROGMEM = { 0x00, 0xFF, 0x00 };
 
 inline void set_leds_global(void)
 {
-	ws2812_setleds_constant((uint8_t *)&REG_GLB_G, N_LEDS);
+	ws2812_setleds_constant((struct cRGB *)&REG_GLB_G, N_LEDS);
 }
 
 inline void update_leds(void)
 {
-	ws2812_sendarray((uint8_t *)i2c_reg + I2C_N_GLB_REG, N_LEDS * 3);
+	ws2812_sendarray(i2c_reg + I2C_N_GLB_REG, N_LEDS * 3);
 }
 
 void do_reset(void)
@@ -35,7 +35,7 @@ void do_reset(void)
 	REG_GLB_G = 0;
 	REG_GLB_R = 0;
 	REG_GLB_B = 0;
-	ws2812_setleds_constant((uint8_t *)&REG_GLB_G, N_LEDS);
+	ws2812_setleds_constant((struct cRGB *)&REG_GLB_G, N_LEDS);
 	REG_GLB_G = pgm_read_byte(init_color);
 	REG_GLB_R = pgm_read_byte(init_color + 1);
 	REG_GLB_B = pgm_read_byte(init_color + 2);
