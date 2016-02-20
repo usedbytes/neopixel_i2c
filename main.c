@@ -1,8 +1,8 @@
 /*
-* Light_WS2812 library example - RGB_blinky
+* Neopixel I2C Slave application
 *
-* cycles one LED through red, green, blue
-*
+* At boot, scrolls a bright spot (init_color) along the array
+* Will stop as soon as an i2c transaction is received
 */
 
 #include <util/delay.h>
