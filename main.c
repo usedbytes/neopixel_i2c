@@ -40,6 +40,7 @@ void do_reset(void)
 	REG_GLB_R = 0;
 	REG_GLB_B = 0;
 #ifdef WS2812_RGBW
+	REG_GLB_W = 0;
 	ws2812_setleds_constant_rgbw((struct cRGBW *)&REG_GLB_G, N_LEDS);
 #else
 	ws2812_setleds_constant((struct cRGB *)&REG_GLB_G, N_LEDS);
@@ -47,6 +48,9 @@ void do_reset(void)
 	REG_GLB_G = pgm_read_byte(init_color);
 	REG_GLB_R = pgm_read_byte(init_color + 1);
 	REG_GLB_B = pgm_read_byte(init_color + 2);
+#ifdef WS2812_RGBW
+	REG_GLB_W = pgm_read_byte(init_color + 3);
+#endif
 	REG_CTRL = 0;
 
 	/* Reset the registers or we'll just go back to the old values! */
